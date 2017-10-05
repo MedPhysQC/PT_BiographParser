@@ -1,0 +1,9 @@
+{
+    "actions": 
+    {
+        "parse": {
+            "filters": {}, 
+            "params": {"use_private_tag": "0x0071,0x9999"}
+        }
+    }
+}

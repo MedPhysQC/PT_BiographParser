@@ -5,5 +5,9 @@
             "filters": {}, 
             "params": {"use_private_tag": "0x0071,0x9999"}
         }
+    },
+    "comments": {
+        "description": "PT/BiographParser for Siemens Biograph", 
+        "version": "20180327"
     }
 }

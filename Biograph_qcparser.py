@@ -27,31 +27,30 @@ __version__ = '01062015'
 __author__ = 'DD'
 
 
-
 try:
+    import pydicom as dicom
     from pydicom import tag
 except ImportError:
+    import dicom
     from dicom import tag
-
-import xml.etree.ElementTree as ET
+    
 import lxml.etree as etree
-'''
-def print_xml(xmlroot):
-   for child in xmlroot:
-        print('=='*20)
-        print(child.tag, child.attrib, child.text)
-        
-        for subchild in child:
-            print('\t', subchild.tag, subchild.attrib, subchild.text)
 
-            for value in subchild:
-                print('\t\t', value.tag, value.attrib, value.text)
-                for subvalue in value:
-                    print('\t\t\t', subvalue.tag, subvalue.attrib, subvalue.text)
+from wad_qc.module import pyWADinput
+from wad_qc.modulelibs import wadwrapper_lib # for acqdatetime
 
-                    for subsubvalue in subvalue:
-                        print('\t\t\t\t', subsubvalue.tag, subsubvalue.attrib, subsubvalue.text)
-'''
+
+def acqdatetime_series(data, results, action):
+    """
+    Read acqdatetime from dicomheaders and write to IQC database
+    """
+
+    dcmInfile = dicom.read_file(data.series_filelist[0][0], stop_before_pixels=True)
+    dt = wadwrapper_lib.acqdatetime_series(dcmInfile)
+
+    results.addDateTime('AcquisitionDateTime', dt) 
+    
+
 def parseqcreport(data,results,action):
 
     try:
@@ -60,16 +59,13 @@ def parseqcreport(data,results,action):
         params = {}
 
        
-    tag_je_moeder = params.get('use_private_tag').split(',')
+    private_tag = params.get('use_private_tag').split(',')
 
-    #print p
-    relevantfile = data.getAllInstances()[0] #data.getAllInstances()[0] oude code
-
+    relevantfile = data.getAllInstances()[0]
     
-    xmltext = relevantfile[tag.Tag(tag_je_moeder)]
+    xmltext = relevantfile[tag.Tag(private_tag)]
 
     root = etree.fromstring(xmltext.value)
-    #print_xml(root)
 
     #Sections:
     #Title
@@ -160,13 +156,14 @@ def parseqcreport(data,results,action):
     TimeAlignmentResidual =  detres.find('lTAResidual').find('cBlkValue').find('aValue').text
     results.addFloat('Time alignment residual',TimeAlignmentResidual)
 
-from wad_qc.module import pyWADinput
+
 if __name__ == "__main__":
     data, results, config = pyWADinput()
 
-    print(config)
     for name,action in config['actions'].items():
-        if name == 'parse':
+        if name == 'acqdatetime':
+            acqdatetime_series(data, results, action)
+        elif name == 'parse':
             parseqcreport(data, results, action)
 
     results.write()

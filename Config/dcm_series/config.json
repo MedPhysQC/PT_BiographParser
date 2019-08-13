@@ -1,13 +1,29 @@
 {
-    "actions": 
-    {
-        "parse": {
+    "actions": {
+        "acqdatetime": {
             "filters": {}, 
-            "params": {"use_private_tag": "0x0071,0x9999"}
+            "params": {}
+        },
+        "parse": {
+            "filters": {},
+            "params": {
+                "use_private_tag": "0x0071,0x9999"
+            }
         }
     },
     "comments": {
-        "description": "PT/BiographParser for Siemens Biograph", 
-        "version": "20180327"
+        "author": "Dennis Dickerscheid, Albert Schweitzer Ziekenhuis",
+        "description": "PT/BiographParser for Siemens Biograph",
+        "version": "20190812"
+    },
+    "info": {
+        "acqdatetime": {
+            "params": {}
+        },
+        "parse": {
+            "params": {
+                "use_private_tag": "Dicom tag to be used for storing data. Of the form 0xgggg,0xeeee. Default: 0x0071,0x9999"
+            }
+        }
     }
 }

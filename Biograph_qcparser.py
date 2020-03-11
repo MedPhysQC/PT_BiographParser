@@ -128,9 +128,12 @@ def parseqcreport(data,results,action):
 
     SystemQualityResults = sectionresults.find('aSystemQualityResults').text
     results.addString('System Quality Results',SystemQualityResults)
-    QCPhantomActivity = sectionresults.find('aPhantomAgeResult').text
-    results.addString('QC Phantom Activity',QCPhantomActivity)
     
+    try:
+        QCPhantomActivity = sectionresults.find('aPhantomAgeResult').text
+        results.addString('QC Phantom Activity',QCPhantomActivity)
+    except:
+        pass
 
     #DetailedQCreport
     detres = root.find('fDetailedSystemQualityReport').find('aItem')

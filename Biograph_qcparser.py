@@ -65,7 +65,8 @@ def parseqcreport(data,results,action):
     
     xmltext = relevantfile[tag.Tag(private_tag)]
 
-    root = etree.fromstring(xmltext.value)
+    clean_text= xmltext.value.replace(b'\x00', b'').strip() # Remove the null byte (\x00) as \x00 is not valid in XML.
+    root = etree.fromstring(clean_text)
 
     #Sections:
     #Title
